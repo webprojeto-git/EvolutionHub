@@ -3,26 +3,27 @@ name: Deploy Oficial Evolution
 on:
   push:
     branches:
-      - master
+      - main # Verifique se sua branch é 'main' ou 'master'
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: 🚚 Checkout do código
         uses: actions/checkout@v3
 
-      - name: Setup Node
+      - name: ⚙️ Setup Node v22
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 22 # Atualizado para evitar o erro EBADENGINE
 
-      - name: Build do Projeto (Tailwind/GSAP)
+      - name: 📦 Instalar e Build
         run: |
           npm install
+          chmod +x node_modules/.bin/vite # Garante permissão de execução para o Vite
           npm run build
 
-      - name: Sync via FTP Locaweb
+      - name: 🚀 Sync via FTP Locaweb
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
