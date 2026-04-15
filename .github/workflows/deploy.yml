@@ -3,7 +3,8 @@ name: Deploy Oficial Evolution
 on:
   push:
     branches:
-      - main # Verifique se sua branch é 'main' ou 'master'
+      - master # Branch corrigida para disparar a automação
+  workflow_dispatch: # Adicionado para permitir disparar manualmente se necessário
 
 jobs:
   build-and-deploy:
@@ -15,12 +16,12 @@ jobs:
       - name: ⚙️ Setup Node v22
         uses: actions/setup-node@v3
         with:
-          node-version: 22 # Atualizado para evitar o erro EBADENGINE
+          node-version: 22 # Versão necessária para o Vite atual
 
       - name: 📦 Instalar e Build
         run: |
           npm install
-          chmod +x node_modules/.bin/vite # Garante permissão de execução para o Vite
+          chmod +x node_modules/.bin/vite # Resolve o erro "Permission denied"
           npm run build
 
       - name: 🚀 Sync via FTP Locaweb
