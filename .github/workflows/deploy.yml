@@ -14,28 +14,20 @@ jobs:
       - name: Checkout do repositório
         uses: actions/checkout@v4
 
+      - name: Criar .htaccess
+        run: |
+          echo "Options -Indexes" > .htaccess
+          echo "DirectoryIndex index.html" >> .htaccess
+
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server:      ftp.evolution.rio.br
+          server:      ${{ secrets.FTP_SERVER }}
           username:    ${{ secrets.FTP_USERNAME }}
           password:    ${{ secrets.FTP_PASSWORD }}
           server-dir:  /home/evolution32/public_html/teste/
           local-dir:   ./
           exclude: |
-  **/.git*
-  **/.git*/**
-  **/node_modules/**
-  **/dist/**
-  .github/**
-  README.md
-  fix-permissions.php
-  diff.txt
-  fix_price.js
-  fix_sync.js
-  patch.js
-  sync.js
-  screen.png
-  package.json
-  package-lock.json
-  vite.config.js
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
