@@ -31,3 +31,16 @@ jobs:
             **/.git*
             **/.git*/**
             **/node_modules/**
+            **/dist/**
+            .github/**
+            README.md
+            fix-permissions.php
+            diff.txt
+            fix_price.js
+            fix_sync.js
+            patch.js
+            sync.js
+            screen.png
+            package.json
+            package-lock.json
+            vite.config.js
