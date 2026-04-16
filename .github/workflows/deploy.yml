@@ -1,10 +1,10 @@
-name: Deploy Oficial Evolution
+name: Deploy Teste Evolution
 
 on:
   push:
     branches:
-      - master # Branch corrigida para disparar a automação
-  workflow_dispatch: # Adicionado para permitir disparar manualmente se necessário
+      - master # Sua branch atual confirmada
+  workflow_dispatch: # Permite rodar o deploy manualmente pelo painel do GitHub
 
 jobs:
   build-and-deploy:
@@ -16,19 +16,20 @@ jobs:
       - name: ⚙️ Setup Node v22
         uses: actions/setup-node@v3
         with:
-          node-version: 22 # Versão necessária para o Vite atual
+          node-version: 22 # Versão compatível com as dependências atuais
 
       - name: 📦 Instalar e Build
         run: |
           npm install
-          chmod +x node_modules/.bin/vite # Resolve o erro "Permission denied"
+          chmod +x node_modules/.bin/vite # Resolve erro de "Permission denied"
           npm run build
 
-      - name: 🚀 Sync via FTP Locaweb
+      - name: 🚀 Sync via FTP para Pasta de Teste
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
-          server-dir: /home/evolution32/public_html/01/
+          # Alvo alterado para a subpasta de visualização do cliente
+          server-dir: /home/evolution32/public_html/teste/
