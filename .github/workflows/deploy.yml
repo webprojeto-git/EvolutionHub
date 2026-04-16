@@ -1,25 +1,37 @@
-- name: Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+name: Deploy Zero Evolution
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Checkout do código
+        uses: actions/checkout@v3
+
+      - name: ⚙️ Setup Node v22
+        uses: actions/setup-node@v3
         with:
-          server:      ${{ secrets.FTP_SERVER }}
-          username:    ${{ secrets.FTP_USERNAME }}
-          password:    ${{ secrets.FTP_PASSWORD }}
-          server-dir:  /home/evolution32/public_html/teste/
-          local-dir:   ./
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            **/dist/**
-            .github/**
-            README.md
-            fix-permissions.php
-            diff.txt
-            fix_price.js
-            fix_sync.js
-            patch.js
-            sync.js
-            screen.png
-            package.json
-            package-lock.json
-            vite.config.js
+          node-version: 22
+
+      - name: 📦 Instalar e Build
+        run: |
+          npm install
+          chmod +x node_modules/.bin/vite
+          npm run build
+
+      - name: 🚀 Sync via FTP (Clean Deploy)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/
+          # Usando o caminho absoluto confirmado no seu log
+          server-dir: /home/evolution32/public_html/teste/
+          # Remove arquivos antigos do servidor que não estão no build atual
+          delete-clean: true
