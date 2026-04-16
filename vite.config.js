@@ -2,13 +2,13 @@ import { defineConfig } from 'vite'
 import { resolve } from 'path'
 
 export default defineConfig({
-  // Caminho base obrigatório para o GitHub Pages (nome do repositório entre barras)
-  base: '/EvolutionHub/', 
+  // Caminho base para a subpasta no servidor Locaweb
+  base: '/teste/', 
 
   build: {
     rollupOptions: {
       input: {
-        // Liste todas as suas páginas aqui para que o Vite as compile corretamente
+        // Mapeamento completo de todas as suas páginas HTML
         main: resolve(__dirname, 'index.html'),
         historia: resolve(__dirname, 'historia.html'),
         galeria: resolve(__dirname, 'galeria.html'),
