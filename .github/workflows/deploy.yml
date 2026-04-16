@@ -31,7 +31,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
-          # Usando o caminho absoluto confirmado no seu log
+          # Caminho absoluto confirmado pelo log de sucesso
           server-dir: /home/evolution32/public_html/teste/
-          # Remove arquivos antigos do servidor que não estão no build atual
-          delete-clean: true
+          # Comando correto para limpar arquivos antigos no servidor
+          dangerous-clean-slate: true
