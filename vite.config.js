@@ -2,13 +2,13 @@ import { defineConfig } from 'vite'
 import { resolve } from 'path'
 
 export default defineConfig({
-  // Caminho base para a subpasta no servidor Locaweb
+  // Define que os recursos (JS/CSS/Imagens) serão buscados em /teste/
   base: '/teste/', 
 
   build: {
     rollupOptions: {
       input: {
-        // Mapeamento completo de todas as suas páginas HTML
+        // Mapeamento de todas as páginas para o build multipage
         main: resolve(__dirname, 'index.html'),
         historia: resolve(__dirname, 'historia.html'),
         galeria: resolve(__dirname, 'galeria.html'),
