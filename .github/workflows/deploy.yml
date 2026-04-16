@@ -1,99 +1,35 @@
-<?php
-// Evolution Hub - Corretor de Permissões
-// 1. Suba este arquivo para /public_html/teste/ via FTP
-// 2. Acesse: http://evolution.rio.br/teste/fix-permissions.php
-// 3. Veja o resultado e APAGUE o arquivo depois
+name: Deploy Evolution Hub via FTP
 
-$base = __DIR__;
-$log  = [];
-$ok   = 0;
-$fail = 0;
+on:
+  push:
+    branches:
+      - master
 
-// Corrige pastas (755)
-$dirs = [$base, $base . '/assets'];
-foreach ($dirs as $dir) {
-    if (is_dir($dir)) {
-        if (chmod($dir, 0755)) {
-            $log[] = ['ok', 'Pasta 755: ' . basename($dir)];
-            $ok++;
-        } else {
-            $log[] = ['err', 'Falhou pasta: ' . basename($dir)];
-            $fail++;
-        }
-    }
-}
+jobs:
+  deploy:
+    name: Upload para evolution.rio.br/teste
+    runs-on: ubuntu-latest
 
-// Corrige arquivos .html (644)
-$files = glob($base . '/*.html');
-foreach ($files as $file) {
-    if (chmod($file, 0644)) {
-        $log[] = ['ok', 'Arquivo 644: ' . basename($file)];
-        $ok++;
-    } else {
-        $log[] = ['err', 'Falhou arquivo: ' . basename($file)];
-        $fail++;
-    }
-}
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
 
-// Corrige assets (644)
-$assets = glob($base . '/assets/*');
-foreach ($assets as $asset) {
-    if (is_file($asset)) {
-        if (chmod($asset, 0644)) {
-            $log[] = ['ok', 'Asset 644: ' . basename($asset)];
-            $ok++;
-        } else {
-            $log[] = ['err', 'Falhou asset: ' . basename($asset)];
-            $fail++;
-        }
-    }
-}
-?>
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<title>Fix Permissions — Evolution Hub</title>
-<style>
-  body { font-family: monospace; background: #0f172a; color: #e2e8f0; padding: 2rem; }
-  h1 { color: #94a3b8; font-size: 1rem; margin-bottom: 1.5rem; letter-spacing: .1em; text-transform: uppercase; }
-  .item { padding: .35rem .75rem; margin: .25rem 0; border-radius: 4px; font-size: .875rem; }
-  .ok  { background: #14532d; color: #86efac; }
-  .err { background: #7f1d1d; color: #fca5a5; }
-  .summary { margin-top: 1.5rem; padding: 1rem; background: #1e293b; border-radius: 8px; }
-  .summary span { font-size: 1.25rem; font-weight: bold; }
-  .green { color: #4ade80; }
-  .red   { color: #f87171; }
-  .warn  { margin-top: 1.5rem; padding: 1rem; background: #78350f; color: #fde68a; border-radius: 8px; font-size: .85rem; }
-  a { color: #60a5fa; }
-</style>
-</head>
-<body>
-<h1>Evolution Hub :: Fix Permissions</h1>
-
-<?php foreach ($log as [$type, $msg]): ?>
-  <div class="item <?= $type ?>"><?= $type === 'ok' ? '✓' : '✗' ?> <?= htmlspecialchars($msg) ?></div>
-<?php endforeach; ?>
-
-<div class="summary">
-  Resultado: <span class="green"><?= $ok ?> OK</span>
-  <?php if ($fail > 0): ?>
-    &nbsp;·&nbsp;<span class="red"><?= $fail ?> falha(s)</span>
-  <?php endif; ?>
-</div>
-
-<?php if ($ok > 0 && $fail === 0): ?>
-  <div class="warn">
-    ✅ Permissões corrigidas com sucesso!<br><br>
-    <strong>⚠️ APAGUE este arquivo agora via FTP.</strong><br>
-    Depois acesse: <a href="http://evolution.rio.br/teste/" target="_blank">http://evolution.rio.br/teste/</a>
-  </div>
-<?php elseif ($fail > 0): ?>
-  <div class="warn">
-    ⚠️ Algumas permissões falharam. O servidor pode não permitir chmod via PHP.<br>
-    Neste caso, entre em contato com o suporte da Locaweb para ajustar as permissões.
-  </div>
-<?php endif; ?>
-
-</body>
-</html>
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server:      ftp.evolution.rio.br
+          username:    ${{ secrets.FTP_USERNAME }}
+          password:    ${{ secrets.FTP_PASSWORD }}
+          server-dir:  /home/evolution32/public_html/teste/
+          local-dir:   ./
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/dist/**
+            .github/**
+            README.md
+            fix-permissions.php
+            diff.txt
+            fix_price.js
+            fix_sync.js
