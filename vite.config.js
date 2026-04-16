@@ -1,19 +1,21 @@
-import { defineConfig } from 'vite';
-import { resolve } from 'path';
+import { defineConfig } from 'vite'
+import { resolve } from 'path'
 
 export default defineConfig({
-  // Garante que os arquivos carreguem as imagens e CSS com caminhos relativos no GitHub Pages
-  base: './', 
+  // Caminho base obrigatório para o GitHub Pages (nome do repositório entre barras)
+  base: '/EvolutionHub/', 
+
   build: {
     rollupOptions: {
       input: {
+        // Liste todas as suas páginas aqui para que o Vite as compile corretamente
         main: resolve(__dirname, 'index.html'),
-        mainEn: resolve(__dirname, 'index-en.html'),
-        galeria: resolve(__dirname, 'galeria.html'),
-        galeriaEn: resolve(__dirname, 'galeria-en.html'),
         historia: resolve(__dirname, 'historia.html'),
-        historiaEn: resolve(__dirname, 'historia-en.html'),
-      }
-    }
-  }
-});
+        galeria: resolve(__dirname, 'galeria.html'),
+        'index-en': resolve(__dirname, 'index-en.html'),
+        'historia-en': resolve(__dirname, 'historia-en.html'),
+        'galeria-en': resolve(__dirname, 'galeria-en.html'),
+      },
+    },
+  },
+})
