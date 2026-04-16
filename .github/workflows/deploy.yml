@@ -1,25 +1,4 @@
-name: Deploy Evolution Hub via FTP
-
-on:
-  push:
-    branches:
-      - master
-
-jobs:
-  deploy:
-    name: Upload para evolution.rio.br/teste
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout do repositório
-        uses: actions/checkout@v4
-
-      - name: Criar .htaccess
-        run: |
-          echo "Options -Indexes" > .htaccess
-          echo "DirectoryIndex index.html" >> .htaccess
-
-      - name: Deploy via FTP
+- name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server:      ${{ secrets.FTP_SERVER }}
