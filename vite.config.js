@@ -12,6 +12,8 @@ export default defineConfig({
         historia: resolve(__dirname, 'historia.html'),
         galeria: resolve(__dirname, 'galeria.html'),
         incubadora: resolve(__dirname, 'incubadora.html'),
+        aceleracao: resolve(__dirname, 'aceleracao.html'),
+        internacionalizacao: resolve(__dirname, 'internacionalizacao.html'),
       },
     },
   },
